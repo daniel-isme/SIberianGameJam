@@ -5,18 +5,26 @@ using UnityEngine;
 
 public class PyramidBuilder : MonoBehaviour
 {
-    private List<GameObject> blocks = new List<GameObject>();
+    public GameObject cube;
+    public GameObject pyramid;
 
     void Start()
     {
-        int length = 10;
-        for (int x = -length; x <= length; x++)
+        Vector3 size = cube.GetComponent<Collider>().bounds.size;
+        
+        int maxHeight = 30;
+
+        for (int height = 0; height < maxHeight; height++)
         {
-            for (int z = -length; z <= length; z++)
+            int length = maxHeight - height;
+            for (int x = -length; x <= length; x++)
             {
-                if (Mathf.Abs(x) == length || Mathf.Abs(z) == length)
+                for (int z = -length; z <= length; z++)
                 {
-                    MakeCube(new Vector3(x, 0, z));
+                    if (Mathf.Abs(x) == length || Mathf.Abs(z) == length)
+                    {
+                        MakeCube(new Vector3(x, height, z));
+                    }
                 }
             }
         }
@@ -24,6 +32,7 @@ public class PyramidBuilder : MonoBehaviour
 
     public void MakeCube(Vector3 position)
     {
-        blocks.Add(Instantiate(gameObject, position, Quaternion.identity));
+        GameObject block = Instantiate(cube, position, Quaternion.identity) as GameObject;
+        block.transform.parent = pyramid.transform;
     }
 }
